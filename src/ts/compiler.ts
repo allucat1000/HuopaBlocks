@@ -1,4 +1,4 @@
-import { type BlockNode, NodeType, type ValueNode, Type, Shape, Operator } from "./types";
+import { type BlockNode, type ValueNode, Type } from "./types";
 
 let extraEndSymbols = "";
 export function compile(AST: Array<BlockNode>) {
@@ -26,17 +26,6 @@ function toType(t: Type) {
     if (t === Type.str) return "string";
     if (t === Type.obj) return "object";
     return "undefined";
-}
-
-function operatorToStr(o: Operator) {
-    switch (o) {
-        case Operator.add: return "+";
-        case Operator.sub: return "-";
-        case Operator.div: return "/";
-        case Operator.mult: return "*";
-        case Operator.pow: return "**";
-        default: return "";
-    }
 }
 
 function castValue(val: string, t: string, stringifyString: boolean = true): number|boolean|string|object|undefined {
@@ -97,7 +86,7 @@ return function* () {`;
             return `pauseUntil(__$runtime__.getTime() + (${Number(parseExpr(r.children[0])) * 1000})); yield`;
 
         case "CONTROL_STOP_ALL":
-            return `__$runtime__.stopAllThreads(); retire(); yield`
+            return `__$runtime__.stopAllThreads(); yield`
             break;
 
         case "OPERATORS_ADD":

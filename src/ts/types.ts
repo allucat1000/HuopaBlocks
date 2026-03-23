@@ -1,38 +1,28 @@
 export enum Type {
-    str,
-    num,
-    bool,
-    obj,
-    block
+    str = "str",
+    num = "num",
+    bool = "bool",
+    obj = "obj"
 };
 
 export enum BlockNodeContentType {
-    text,
-    value
+    text = "text",
+    value = "value"
 }
 
 export enum Shape {
-    middle,
-    top,
-    bottom,
-    boolean,
-    reporter
+    middle = "middle",
+    top = "top",
+    bottom = "bottom",
+    boolean = "boolean",
+    reporter = "reporter"
 };
 
-export enum Operator {
-    add,
-    sub,
-    mult,
-    div,
-    pow,
-    sqrt
-}
-
 export enum NodeType {
-    operator,
-    value, 
-    block,
-    category
+    operator = "operator",
+    value = "value", 
+    block = "block",
+    category = "category"
 }
 
 export interface BlockStyle {
