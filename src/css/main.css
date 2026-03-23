@@ -25,6 +25,9 @@ body.Dark {
     --popup-button-border-color: rgb(120 120 120 / 0.5);
     
     --placeholder-text-color: #999;
+
+    --toast-background-color: rgb(60 60 60 / 0.7);
+    --toast-border-color: rgb(120 120 120 / 0.5);
 }
 
 :root.Light,
@@ -98,4 +101,32 @@ body.Dragging {
 
 .Hidden {
     display: none !important;
+}
+
+.Toast {
+    padding: 0.5em;
+    position: absolute;
+    bottom: 0.5em;
+    right: 0.5em;
+    border-radius: 0.5em;
+    width: 20em;
+    color: var(--text-color);
+    background-color: var(--toast-background-color);
+    border: var(--toast-border-color) solid 1px;
+    transition: right ease-in-out 1s;
+}
+
+.ToastClosing {
+    right: -25em;
+}
+
+.ToastTitle {
+    margin: 0;
+    margin-bottom: 0.5em;
+}
+
+.ToastDescription {
+    margin: 0;
+    font-size: 0.8em;
+    color: gray;
 }
