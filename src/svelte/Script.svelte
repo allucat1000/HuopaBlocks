@@ -90,25 +90,28 @@
                 const gen = create(inmutableRuntime)(thread)();
                 thread.gen = gen;
 
+                gen.next();
+
                 let r: boolean = false;
+                let greenFlagScriptRunning: boolean = true;
+
+                const removeGlow = () => {
+                    if (main) for (const c of main.children) c.classList.remove("BlockGlow");
+                };
 
                 thread.onStop = () => {
-                    if (main && !r)
-                        for (const c of main.children)
-                            c.classList.remove("BlockGlow");
+                    if (!r) removeGlow();
                 }
 
                 thread.onCrash = () => {
-                    if (main)
-                        for (const c of main.children) 
-                            c.classList.add("BlockError");
-                        
+                    if (main) for (const c of main.children) c.classList.add("BlockError");
                 }
 
                 runtime.runThread(thread);
-                r = runtime.singularThreadStart(thread, () => { if (main) for (const c of main.children) c.classList.remove("BlockGlow"); });
-                if (r) for (const c of main.children)
+                r = runtime.singularThreadStart(thread, () => { greenFlagScriptRunning = false; removeGlow() });
+                if (r) if (greenFlagScriptRunning) for (const c of main.children)
                     c.classList.add("BlockGlow");
+            
 
                 return;
             }
