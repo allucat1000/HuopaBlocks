@@ -1,0 +1,93 @@
+:root.Dark,
+body.Dark {
+    --background-color: rgb(20 20 20);
+    --text-color: #fff;
+    
+    --icon-color: #fff;
+
+    --sidebar-background-color: rgb(50 50 50 / 0.3);
+    --sidebar-border-color: rgb(120 120 120 / 0.5);
+
+    --topbar-background-color: rgb(50 50 50);
+    --topbar-size: 3em;
+    --topbar-text-color: #fff;
+    --topbar-border-color: transparent;
+
+    --popup-border-color: rgb(120 120 120 / 0.5);
+    --popup-background-color: rgb(60 60 60 / 0.7);
+    --popup-dark-color: rgb(0 0 0 / 0.5);
+
+    --popup-button-background-color: rgb(70 70 70 / 0.5);
+    --popup-button-border-color: rgb(120 120 120 / 0.5);
+    
+    --placeholder-text-color: #999;
+}
+
+:root.Light,
+body.Light {
+    --background-color: rgb(240 240 240);
+    --text-color: #000;
+
+    --icon-color: #fff;
+
+    --sidebar-background-color: rgb(255 255 255);
+    --sidebar-border-color: rgb(195 195 195);
+
+    --topbar-background-color: rgb(84 159 255);
+    --topbar-size: 3em;
+    --topbar-text-color: #fff;
+    --topbar-border-color: rgb(70 132 214);
+
+    --popup-border-color: rgb(188 188 188);
+    --popup-background-color: rgb(255 255 255 / 80%);
+    --popup-dark-color: rgb(0 0 0 / 0.5);
+
+    --popup-button-background-color: rgb(216 216 216 / 80%);
+    --popup-button-border-color: rgb(135 135 135 / 50%);
+
+    --placeholder-text-color: #d1d1d1;
+}
+
+body {
+    background-color: var(--background-color);
+}
+
+.BlockCategoryHeading {
+    color: var(--text-color);
+    margin: 0;
+    margin-bottom: 0.5em;
+    font-weight: bold;
+}
+
+.Sidebar {
+    position: absolute;
+    height: calc(100% - (2em + var(--topbar-size)));
+    left: 0;
+    top: var(--topbar-size);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    padding: 1em;
+    width: 15rem;
+    z-index: 99;
+    background-color: var(--sidebar-background-color);
+    border-right: var(--sidebar-border-color) solid 1px;
+    align-items: flex-start;
+}
+
+.CodeArea {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: var(--topbar-size);
+    height: calc(100% - var(--topbar-size));
+    overflow: hidden;
+}
+
+body.Dragging {
+    user-select: none;
+}
+
+* {
+    user-select: none;
+}

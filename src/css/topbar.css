@@ -1,0 +1,63 @@
+
+.Topbar {
+    position: absolute;
+    top: 0;
+    height: var(--topbar-size);
+    width: calc(100% - 2em);
+    left: 0;
+    z-index: 99;
+    display: flex;
+    flex-direction: row;
+    background-color: var(--topbar-background-color);
+    padding: 0 1em;
+    gap: 0.5em;
+    border-bottom: var(--topbar-border-color) solid 1px;
+    align-items: center;
+    z-index: 100;
+}
+
+.TopbarTitle {
+    color: var(--topbar-text-color);
+    font-weight: bold;
+    padding-right: 0.5em;
+}
+
+.TopbarButton {
+    color: var(--topbar-text-color);
+    background-color: transparent;
+    border: transparent;
+    cursor: pointer;
+    height: stretch;
+    padding: 0 0.5em;
+    outline: none;
+}
+
+.TopbarButton:hover {
+    background-color: rgba(100, 100, 100, 0.3);
+}
+
+.ThemeToggle {
+    color: var(--icon-color);
+    cursor: pointer;
+    height: stretch;
+    padding: 0 0.5em;;
+}
+
+.ThemeToggle:hover {
+    background-color: rgba(100, 100, 100, 0.3);
+}
+
+.TopbarInput {
+    height: stretch;
+    background-color: transparent;
+    border: transparent;
+    padding: 0 0.5em;
+    outline: none;
+    color: white;
+    font-weight: bold;
+    width: 165px;
+}
+
+.TopbarInput::placeholder {
+    color: var(--placeholder-text-color);
+}

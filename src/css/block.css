@@ -1,0 +1,80 @@
+.Block {
+    border-radius: 0.5em;
+    display: inline-flex;
+    flex-direction: row;
+    gap: 0.25em;
+    padding: 0.5em;
+    background-color: var(--block-bg-color);
+    border: var(--block-border-color) solid;
+    cursor: grab;
+    align-items: baseline;
+    min-height: 18px;
+}
+
+.BooleanBlock {
+    corner-shape: bevel; /* if your browser doesn't support this, skill issue */
+    border-radius: 1.1em;
+    padding: 0.5em 1em;
+}
+
+.BlockContentText {
+    margin: 0;
+    color: var(--block-text-color);
+    user-select: none;
+    margin-right: 0.25em;
+}
+
+.BlockContentValueInput {
+    padding: 0.25em;
+    border-radius: 0.8em;
+    border: none;
+    padding-left: 0.5em;
+    outline: var(--block-border-color) solid 1px;
+    min-width: 8px;
+    font-size: 0.83em;
+    width: 32px;
+}
+
+.BlockContentValueInputSize {
+    position: absolute;
+    opacity: 0;
+    user-select: none;
+    font-size: 0.83em;
+    z-index: -1;
+}
+
+.DraggingBlock {
+    cursor: grabbing !important;
+    position: fixed;
+    z-index: 999;
+}
+
+.BlockScript {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.BlockGlow {
+    box-shadow: 0 0 10px 4px rgba(255, 255, 0, 0.5);
+}
+
+.BlockError {
+    box-shadow: 0 0 10px 4px rgba(255, 0, 0, 0.8);
+}
+
+.TopBlock {
+    border-radius: 3em 3em 0.5em 0.5em;
+    padding: 1em 1.25em 0.5em;
+}
+
+.BottomBlock {
+    padding-bottom: 0.66em;
+    padding: 0.5em 0.7em 0.7em;
+    border-radius: 0.5em 0.5em 2em 2em;
+}
+
+.ReporterBlock {
+    border-radius: 2em;
+}
