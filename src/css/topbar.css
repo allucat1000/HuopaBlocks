@@ -61,3 +61,31 @@
 .TopbarInput::placeholder {
     color: var(--placeholder-text-color);
 }
+
+.TopbarDropdown {
+    height: stretch;
+}
+
+.TopbarDropdownOptions {
+    position: absolute;
+    padding: 0.5em 0;
+    border-radius: 0em 0em 0.5em 0.5em;
+    background: var(--topbar-background-color);
+    display: flex;
+    flex-direction: column;
+    border: var(--topbar-border-color) solid 1px;
+}
+
+.TopbarDropdownOption {
+    color: var(--topbar-text-color);
+    background-color: transparent;
+    border: transparent;
+    cursor: pointer;
+    height: stretch;
+    padding: 0.5em 1em;
+    outline: none;
+}
+
+.TopbarDropdownOption:hover {
+    background-color: rgba(100, 100, 100, 0.3);
+}

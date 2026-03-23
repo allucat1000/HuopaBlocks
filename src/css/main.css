@@ -91,3 +91,7 @@ body.Dragging {
 * {
     user-select: none;
 }
+
+.Hidden {
+    display: none !important;
+}
