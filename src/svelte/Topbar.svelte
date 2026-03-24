@@ -7,7 +7,11 @@
     import Popup from "./Popup.svelte";
     import { PopupElementTag, type ProjectHeader } from "../ts/types";
     import TopbarDropdown from "./TopbarDropdown.svelte";
+    import { buildProjectZip, loadProjectJSON } from "../ts/file";
+
     let popupOpen: boolean = false;
+    let projectDropdownVisiblity: boolean = $state(false);
+
     function viewJSON() {
         if (popupOpen) return;
         popupOpen = true;
@@ -32,16 +36,17 @@
         });
     }
 
-    function saveProject() {
+    async function saveProject() {
+        projectDropdownVisiblity = false;
         const a = document.createElement("a");
 
         const data = JSON.stringify(project, null, 2);
-        const blob = new Blob([data], { type: "application/json" });
+        const blob = await buildProjectZip(data);
 
         const url = URL.createObjectURL(blob);
 
         a.href = url;
-        a.download = `${project.name || "project"}`;
+        a.download = `${project.name || "project"}.hblock`;
 
         document.body.appendChild(a);
         a.click();
@@ -51,6 +56,7 @@
     }
 
     function loadProject(e: Event) {
+        projectDropdownVisiblity = false;
         const data = (e.target as HTMLInputElement).files?.[0];
         if (!data) return;
 
@@ -59,11 +65,11 @@
         const r = new FileReader();
         r.onload = (e) => {
             try {
-                const parsed = JSON.parse(e.target?.result as string) as Partial<ProjectHeader>;
-                Object.assign(project, parsed);
+                const blob = new Blob([e.target?.result as ArrayBuffer]);
+                loadProjectJSON(blob);
             } catch {}
         };
-        r.readAsText(data);
+        r.readAsArrayBuffer(data);
     }
 </script>
 
@@ -74,12 +80,12 @@
     {:else}
         <LightIcon class="ThemeToggle" onclick={() => CurrentTheme.dark = !CurrentTheme.dark} />
     {/if}
-    <TopbarDropdown title="Project">
-        <button class="TopbarDropdownOption" onclick={saveProject}>Save</button>
-        <div class="TopbarDropdownOption">
-            <input class="ProjectLoadInput" onchange={loadProject} type="file"><span>Load</span>
+    <TopbarDropdown title="Project" bind:visible={projectDropdownVisiblity}>
+        <button class="TopbarDropdownOption" onclick={saveProject}>Save Project</button>
+        <div class="TopbarDropdownOption TopbarDropdownInputOption">
+            <input class="ProjectLoadInput" onchange={loadProject} type="file"><span>Load Project</span>
         </div>
+        <button class="TopbarDropdownOption" onclick={viewJSON}>View JSON Data</button>
     </TopbarDropdown>
-    <button class="TopbarButton" onclick={viewJSON}>View project JSON</button>
     <input class="TopbarInput" placeholder="Give this project a name!" bind:value={project.name}>
 </div>

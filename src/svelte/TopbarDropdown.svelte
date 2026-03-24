@@ -1,13 +1,18 @@
 <script lang="ts">
     import type { Snippet } from "svelte";
 
-    const { title, children }: { title: string, children: Snippet } = $props(); 
+    let { title, children, visible = $bindable(false) }: { title: string, children: Snippet, visible: boolean } = $props(); 
 
-    let visible: boolean = $state(false);
+    let open = $state(visible);
+
+    $effect(() => {
+        open = visible;
+    });
+
 </script>
 <div class="TopbarDropdown">
-    <button onclick={() => visible = !visible} class="TopbarButton" {title}>{title}</button>
-    <div class={`TopbarDropdownOptions ${visible ? "" : "Hidden"}`}>
+    <button onclick={() => visible = !visible} class={`TopbarButton ${open ? "TopbarDropdownOpen" : ""}`} {title}>{title}</button>
+    <div class={`TopbarDropdownOptions ${open ? "" : "Hidden"}`}>
         {@render children()}
     </div>
 </div>

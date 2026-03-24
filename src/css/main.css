@@ -15,13 +15,13 @@ body.Dark {
     --topbar-background-color: rgb(50 50 50);
     --topbar-size: 3em;
     --topbar-text-color: #fff;
-    --topbar-border-color: transparent;
+    --topbar-border-color: rgb(120 120 120 / 0.5);
 
     --popup-border-color: rgb(120 120 120 / 0.5);
-    --popup-background-color: rgb(60 60 60 / 0.7);
-    --popup-dark-color: rgb(0 0 0 / 0.5);
+    --popup-background-color: rgb(20 20 20 / 0.9);
+    --popup-dark-color: rgb(0 0 0 / 0.3);
 
-    --popup-button-background-color: rgb(70 70 70 / 0.5);
+    --popup-button-background-color: rgb(40 40 40 / 0.7);
     --popup-button-border-color: rgb(120 120 120 / 0.5);
     
     --placeholder-text-color: #999;
@@ -37,7 +37,7 @@ body.Light {
 
     --icon-color: #fff;
 
-    --sidebar-background-color: rgb(255 255 255);
+    --sidebar-background-color: rgb(255 255 255 / 0.7);
     --sidebar-border-color: rgb(195 195 195);
 
     --topbar-background-color: rgb(84 159 255);
@@ -46,11 +46,11 @@ body.Light {
     --topbar-border-color: rgb(70 132 214);
 
     --popup-border-color: rgb(188 188 188);
-    --popup-background-color: rgb(255 255 255 / 80%);
+    --popup-background-color: rgb(255 255 255 / 0.9);
     --popup-dark-color: rgb(0 0 0 / 0.5);
 
-    --popup-button-background-color: rgb(216 216 216 / 80%);
-    --popup-button-border-color: rgb(135 135 135 / 50%);
+    --popup-button-background-color: rgb(216 216 216 / 0.8);
+    --popup-button-border-color: rgb(135 135 135 / 0.5);
 
     --placeholder-text-color: #d1d1d1;
 }
