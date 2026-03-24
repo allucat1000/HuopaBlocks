@@ -171,6 +171,7 @@
         function mouseDown(e: MouseEvent) {
             if (!main) return;
             if ((e.target as HTMLElement).closest("input")) return;
+            if (script.children.length === 1 && (script.children[0].shape == Shape.boolean || script.children[0].shape == Shape.reporter)) return;
 
             document.body.classList.add("Dragging");
 

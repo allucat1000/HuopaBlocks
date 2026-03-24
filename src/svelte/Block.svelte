@@ -96,10 +96,9 @@
         let dragStart = 0;
 
         function mouseMove(e: MouseEvent) {
-            if (!dragging || !main || (!palette && !script)) return;
+            if (!dragging || !main || (!palette && !script) && block.shape !== Shape.boolean && block.shape !== Shape.reporter) return;
 
             if (dragState.block) {
-                // Temporarily hide the dragging element so elementFromPoint sees through it
                 main.style.pointerEvents = "none";
                 const el = document.elementFromPoint(e.clientX, e.clientY);
                 main.style.pointerEvents = "";
@@ -153,6 +152,10 @@
             const container = document.querySelector(".CodeArea")!;
             const rect2 = container.getBoundingClientRect();
 
+            if (!palette) {
+                if (x < 240 || taken) deleteBlock(block);
+            }
+
             if (palette && x > 240 && !taken) {
                 const d = document.querySelector(".CodeArea");
                 if (d) {
@@ -202,7 +205,7 @@
             });
         }
 
-        if (palette) main.addEventListener("mousedown", mouseDown);
+        if (palette || block.shape === Shape.boolean || block.shape === Shape.reporter) main.addEventListener("mousedown", mouseDown);
 
         return () => {
             main?.removeEventListener("mousedown", mouseDown);
