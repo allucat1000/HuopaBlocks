@@ -5,7 +5,7 @@
     import LightIcon from "@lucide/svelte/icons/sun";
     import { CurrentTheme } from "../ts/main.svelte";
     import Popup from "./Popup.svelte";
-    import { PopupElementTag } from "../ts/types";
+    import { PopupElementTag, type ProjectHeader } from "../ts/types";
     import TopbarDropdown from "./TopbarDropdown.svelte";
     let popupOpen: boolean = false;
     function viewJSON() {
@@ -49,6 +49,22 @@
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
     }
+
+    function loadProject(e: Event) {
+        const data = (e.target as HTMLInputElement).files?.[0];
+        if (!data) return;
+
+        (e.target as HTMLInputElement).value = "";
+
+        const r = new FileReader();
+        r.onload = (e) => {
+            try {
+                const parsed = JSON.parse(e.target?.result as string) as Partial<ProjectHeader>;
+                Object.assign(project, parsed);
+            } catch {}
+        };
+        r.readAsText(data);
+    }
 </script>
 
 <div class="Topbar">
@@ -60,6 +76,9 @@
     {/if}
     <TopbarDropdown title="Project">
         <button class="TopbarDropdownOption" onclick={saveProject}>Save</button>
+        <div class="TopbarDropdownOption">
+            <input class="ProjectLoadInput" onchange={loadProject} type="file"><span>Load</span>
+        </div>
     </TopbarDropdown>
     <button class="TopbarButton" onclick={viewJSON}>View project JSON</button>
     <input class="TopbarInput" placeholder="Give this project a name!" bind:value={project.name}>

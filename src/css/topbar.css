@@ -74,6 +74,7 @@
     display: flex;
     flex-direction: column;
     border: var(--topbar-border-color) solid 1px;
+    align-items:flex-start;
 }
 
 .TopbarDropdownOption {
@@ -86,6 +87,17 @@
     outline: none;
 }
 
+.TopbarDropdownOption > span {
+    font-size: 0.83em;
+}
+
 .TopbarDropdownOption:hover {
     background-color: rgba(100, 100, 100, 0.3);
+}
+
+.ProjectLoadInput {
+    opacity: 0;
+    position: absolute;
+    z-index: 1;
+    cursor: pointer;
 }
