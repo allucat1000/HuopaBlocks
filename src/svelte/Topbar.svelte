@@ -58,8 +58,8 @@
     {:else}
         <LightIcon class="ThemeToggle" onclick={() => CurrentTheme.dark = !CurrentTheme.dark} />
     {/if}
-    <TopbarDropdown title="File">
-        <button class="TopbarDropdownOption" onclick={saveProject}>Save Project</button>
+    <TopbarDropdown title="Project">
+        <button class="TopbarDropdownOption" onclick={saveProject}>Save</button>
     </TopbarDropdown>
     <button class="TopbarButton" onclick={viewJSON}>View project JSON</button>
     <input class="TopbarInput" placeholder="Give this project a name!" bind:value={project.name}>
