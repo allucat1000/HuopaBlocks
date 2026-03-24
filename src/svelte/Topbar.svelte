@@ -14,6 +14,7 @@
 
     function viewJSON() {
         if (popupOpen) return;
+        projectDropdownVisiblity = false;
         popupOpen = true;
         const p = mount(Popup, {
             target: document.querySelector("#main")!,
