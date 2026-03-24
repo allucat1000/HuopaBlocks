@@ -111,3 +111,11 @@ export interface EventObject {
 export interface Theme {
     dark: boolean;
 }
+
+export interface DragState {
+    block: BlockNode | null;
+    sourceScriptId: string | null;
+    sourceBlockId: string | null;
+    hoveredSlot: Element | null;
+    blockTaken: boolean;
+}

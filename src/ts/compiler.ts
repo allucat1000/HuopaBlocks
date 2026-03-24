@@ -83,7 +83,7 @@ return function* () {`;
             return `${parseExpr(r.children[0], false)}${parseExpr(r.children[1], false)}${parseExpr(r.children[2], false)}`;
 
         case "CONTROL_WAIT":
-            return `pauseUntil(__$runtime__.getTime() + (${Number(parseExpr(r.children[0])) * 1000})); yield`;
+            return `pauseUntil(__$runtime__.getTime() + (${parseLayer(r.children, true)}) * 1000); yield`;
 
         case "CONTROL_STOP_ALL":
             return `__$runtime__.stopAllThreads(); yield`

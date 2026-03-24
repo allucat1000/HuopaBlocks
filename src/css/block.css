@@ -78,3 +78,8 @@
 .ReporterBlock {
     border-radius: 2em;
 }
+
+.DropTarget {
+    outline: 2px solid white;
+    opacity: 0.7;
+}

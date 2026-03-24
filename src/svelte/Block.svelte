@@ -5,8 +5,9 @@
     import { compile } from "../ts/compiler";
     import Block_ from "./Block.svelte";
     import { nanoid } from "nanoid";
-    import { project } from "../ts/main.svelte";
+    import { dragState, project } from "../ts/main.svelte";
     import { round } from "../ts/utils";
+    import InputSlot from "./InputSlot.svelte";
 
     let { block, cl, palette, deleteBlock, updateBlock }: { block: BlockNode; cl: string; palette: boolean; deleteBlock: Function; updateBlock: Function } = $props();
 
@@ -97,12 +98,51 @@
         function mouseMove(e: MouseEvent) {
             if (!dragging || !main || (!palette && !script)) return;
 
+            if (dragState.block) {
+                // Temporarily hide the dragging element so elementFromPoint sees through it
+                main.style.pointerEvents = "none";
+                const el = document.elementFromPoint(e.clientX, e.clientY);
+                main.style.pointerEvents = "";
+
+                const slot = el?.closest("[data-input-slot]") ?? null;
+
+                if (dragState.hoveredSlot && dragState.hoveredSlot !== slot) {
+                    dragState.hoveredSlot.classList.remove("DropTarget");
+                }
+
+                if (slot) {
+                    slot.classList.add("DropTarget");
+                }
+
+                dragState.hoveredSlot = slot;
+            }
+
             main.style.left = `${e.clientX - dragStartX}px`;
             main.style.top = `${e.clientY - dragStartY}px`;
         }
 
         function mouseUp() {
             if (!dragging || !main) return;
+
+            if (dragState.block && dragState.hoveredSlot) {
+                dragState.hoveredSlot.classList.remove("DropTarget");
+                dragState.hoveredSlot.dispatchEvent(new CustomEvent("blockdrop", {
+                    bubbles: true,
+                    detail: { block: dragState.block }
+                }));
+            }
+
+            let taken: boolean = false;
+
+            dragState.block = null;
+            dragState.hoveredSlot = null;
+            dragState.sourceScriptId = null;
+            dragState.sourceBlockId = null;
+            if (dragState.blockTaken) {
+                dragState.blockTaken = false;
+                taken = true;
+            }
+
             document.body.classList.remove("Dragging");
 
             dragging = false;
@@ -113,7 +153,7 @@
             const container = document.querySelector(".CodeArea")!;
             const rect2 = container.getBoundingClientRect();
 
-            if (palette && x > 240) {
+            if (palette && x > 240 && !taken) {
                 const d = document.querySelector(".CodeArea");
                 if (d) {
                     const scrD: ScriptNode = {
@@ -134,6 +174,12 @@
         function mouseDown(e: MouseEvent) {
             if (!main) return;
             if ((e.target as HTMLElement).closest("input")) return;
+
+            if (block.shape === Shape.reporter || block.shape === Shape.boolean) {
+                dragState.block = cloneBlock(bl);
+                dragState.sourceScriptId = null;
+                dragState.sourceBlockId = block.id;
+            }
 
             document.body.classList.add("Dragging");
 
@@ -177,11 +223,18 @@
                 {@const child = block.children[i]}
 
                 {#if "value" in child}
-                    {#if typeof child.value === "string"}
-                        <span class="BlockContentValueInputSize" aria-hidden="true"></span>
-
-                        <input class="BlockContentValueInput" value={child.value} use:autoWidth oninput={(e) => updateInput(e, i)} />
-                    {/if}
+                    <InputSlot
+                        value={child.value as string}
+                        index={i}
+                        onValueChange={(val: string) => updateBlock({
+                            ...block,
+                            children: block.children.map((c, idx) => idx === i ? { ...c, value: val } : c)
+                        })}
+                        onBlockDrop={(dropped: BlockNode) => { dragState.blockTaken = true; updateBlock({
+                            ...block,
+                            children: block.children.map((c, idx) => idx === i ? dropped : c)
+                        })}}
+                    />
 
                 {:else if "op" in child}
                     <Block_ block={child} cl={`Category-${child.category}`} palette={false} deleteBlock={() => {}} updateBlock={() => {}}/>
