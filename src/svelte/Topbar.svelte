@@ -84,7 +84,7 @@
     <TopbarDropdown title="Project" bind:visible={projectDropdownVisiblity}>
         <button class="TopbarDropdownOption" title="Save Project" onclick={saveProject}>Save Project</button>
         <div class="TopbarDropdownOption TopbarDropdownInputOption">
-            <input class="ProjectLoadInput" onchange={loadProject} type="file" title="Load Project"><span>Load Project</span>
+            <input class="ProjectLoadInput" onchange={loadProject} type="file" title="Load Project" accept=".zip, .hblock"><span>Load Project</span>
         </div>
         <button class="TopbarDropdownOption" title="View JSON Data" onclick={viewJSON}>View JSON Data</button>
     </TopbarDropdown>
