@@ -96,25 +96,7 @@
         let dragStart = 0;
 
         function mouseMove(e: MouseEvent) {
-            if (!dragging || !main || (!palette && !script) && block.shape !== Shape.boolean && block.shape !== Shape.reporter) return;
-
-            if (dragState.block) {
-                main.style.pointerEvents = "none";
-                const el = document.elementFromPoint(e.clientX, e.clientY);
-                main.style.pointerEvents = "";
-
-                const slot = el?.closest("[data-input-slot]") ?? null;
-
-                if (dragState.hoveredSlot && dragState.hoveredSlot !== slot) {
-                    dragState.hoveredSlot.classList.remove("DropTarget");
-                }
-
-                if (slot) {
-                    slot.classList.add("DropTarget");
-                }
-
-                dragState.hoveredSlot = slot;
-            }
+            if (!dragging || !main || (!palette && !script)) return;
 
             main.style.left = `${e.clientX - dragStartX}px`;
             main.style.top = `${e.clientY - dragStartY}px`;
@@ -122,25 +104,6 @@
 
         function mouseUp() {
             if (!dragging || !main) return;
-
-            if (dragState.block && dragState.hoveredSlot) {
-                dragState.hoveredSlot.classList.remove("DropTarget");
-                dragState.hoveredSlot.dispatchEvent(new CustomEvent("blockdrop", {
-                    bubbles: true,
-                    detail: { block: dragState.block }
-                }));
-            }
-
-            let taken: boolean = false;
-
-            dragState.block = null;
-            dragState.hoveredSlot = null;
-            dragState.sourceScriptId = null;
-            dragState.sourceBlockId = null;
-            if (dragState.blockTaken) {
-                dragState.blockTaken = false;
-                taken = true;
-            }
 
             document.body.classList.remove("Dragging");
 
@@ -153,10 +116,10 @@
             const rect2 = container.getBoundingClientRect();
 
             if (!palette) {
-                if (x < 240 || taken) deleteBlock(block);
+                if (x < 240) deleteBlock(block);
             }
 
-            if (palette && x > 240 && !taken) {
+            if (palette && x > 240) {
                 const d = document.querySelector(".CodeArea");
                 if (d) {
                     const scrD: ScriptNode = {
@@ -177,12 +140,6 @@
         function mouseDown(e: MouseEvent) {
             if (!main) return;
             if ((e.target as HTMLElement).closest("input")) return;
-
-            if (block.shape === Shape.reporter || block.shape === Shape.boolean) {
-                dragState.block = cloneBlock(bl);
-                dragState.sourceScriptId = null;
-                dragState.sourceBlockId = block.id;
-            }
 
             document.body.classList.add("Dragging");
 
@@ -205,7 +162,7 @@
             });
         }
 
-        if (palette || block.shape === Shape.boolean || block.shape === Shape.reporter) main.addEventListener("mousedown", mouseDown);
+        if (palette) main.addEventListener("mousedown", mouseDown);
 
         return () => {
             main?.removeEventListener("mousedown", mouseDown);

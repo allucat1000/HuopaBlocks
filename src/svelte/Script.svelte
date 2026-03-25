@@ -3,10 +3,11 @@
     import { NodeType, Shape, type BlockNode, type BlockReference, type ScriptNode } from "../ts/types";
     import Block from "./Block.svelte";
     import { compile } from "../ts/compiler";
-    import { project } from "../ts/main.svelte";
+    import { dragState, project } from "../ts/main.svelte";
     import { Thread } from "../ts/runtime";
     import { runtime } from "../ts/main.svelte";
     import { round } from "../ts/utils";
+    import { nanoid } from "nanoid";
 
     const { script, updateScript, deleteScript }: { script: ScriptNode, updateScript: Function, deleteScript: Function } = $props();
 
@@ -29,6 +30,24 @@
         function mouseMove(e: MouseEvent) {
             if (!dragging || !main) return;
 
+            if (dragState.block) {
+                main.style.pointerEvents = "none";
+                const el = document.elementFromPoint(e.clientX, e.clientY);
+                main.style.pointerEvents = "";
+
+                const slot = el?.closest("[data-input-slot]") ?? null;
+
+                if (dragState.hoveredSlot && dragState.hoveredSlot !== slot) {
+                    dragState.hoveredSlot.classList.remove("DropTarget");
+                }
+
+                if (slot) {
+                    slot.classList.add("DropTarget");
+                }
+
+                dragState.hoveredSlot = slot;
+            }
+
             main.style.left = `${e.clientX - dragStartX}px`;
             main.style.top = `${e.clientY - dragStartY}px`;
         }
@@ -46,6 +65,26 @@
         function mouseUp() {
             if (!dragging || !main) return;
 
+            if (dragState.block && dragState.hoveredSlot) {
+                dragState.hoveredSlot.classList.remove("DropTarget");
+                dragState.hoveredSlot.dispatchEvent(new CustomEvent("blockdrop", {
+                    bubbles: true,
+                    detail: { block: dragState.block }
+                }));
+            }
+
+            let taken: boolean = false;
+
+            dragState.block = null;
+            dragState.hoveredSlot = null;
+            dragState.sourceScriptId = null;
+            dragState.sourceBlockId = null;
+            if (dragState.blockTaken) {
+                dragState.blockTaken = false;
+                taken = true;
+            }
+
+
             const { x, y } = getPos();
 
             document.body.classList.remove("Dragging");
@@ -58,7 +97,7 @@
             document.removeEventListener("mousemove", mouseMove);
             document.removeEventListener("mouseup", mouseUp);
 
-            if (Date.now() - dragStart < 100) {
+            if (Date.now() - dragStart < 100 && !taken) {
                 if (main.children?.[0]?.classList?.contains("BlockError") || main.children?.[0]?.classList?.contains("BlockGlow")) {
                     for (const c of main.children)
                         c?.classList?.remove("BlockGlow", "BlockError");
@@ -116,7 +155,7 @@
                 return;
             }
 
-            if (x < 240) {
+            if (x < 240 || taken) {
                 deleteScript();
                 return;
             }
@@ -133,9 +172,11 @@
                 for (const ref of col) {
                     if (ref.script.id === script.id && ref.block.id === block.id) continue;
 
-                    const b = ref.script.y + ref.index * 40;
+                    const height = main.getBoundingClientRect().height;
+                    const b = ref.script.y + height;
                     const dist = getPos().y - b
-                    if (dist >= 0 && dist < mDist && Math.abs(getPos().x - ref.script.x) < 50) {
+                    if (dist >= 0 && dist < mDist && dist < 30 && Math.abs(getPos().x - ref.script.x) < 50) {
+                        console.log(ref.script.y, dist);
                         mDist = dist;
                         closest = ref;
                     }
@@ -168,11 +209,30 @@
             }
         }
 
+        function cloneBlock(block: BlockNode): BlockNode {
+            return {
+                ...block,
+                id: nanoid(),
+                children: block.children.map(c =>
+                    "value" in c
+                        ? { ...c }
+                        : cloneBlock(c)
+                )
+            };
+        }
+
         function mouseDown(e: MouseEvent) {
             if (!main) return;
             if ((e.target as HTMLElement).closest("input")) return;
-            if (script.children.length === 1 && (script.children[0].shape == Shape.boolean || script.children[0].shape == Shape.reporter)) return;
-
+            if (script.children.length === 1) {
+                const block = script.children[0];
+                if (block.shape === Shape.reporter || block.shape === Shape.boolean) {
+                    dragState.block = cloneBlock(block);
+                    dragState.sourceScriptId = null;
+                    dragState.sourceBlockId = block.id;
+                }
+            }
+            
             document.body.classList.add("Dragging");
 
             dragStart = Date.now();
